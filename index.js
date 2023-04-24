@@ -31,12 +31,30 @@ app.get('/api/persons', (request, response)=>{
 })
 
 app.post('/api/persons', (request, response)=>{
-  const body = request.body
+  const {name, number} = request.body
+
+  if (!name.trim()){
+    return response.status(400).json({error: 'Name is missing!'})
+  }
+
+  if (!number.trim()){
+    response.status(400).json({error: 'Number is missing!'})
+    return
+  }
+
+  const duplicate = persons.find(person => {
+    return person.name.toLowerCase()===name.toLowerCase()
+  })
+
+  if (duplicate) {
+    return response.status(400).json({error: 'Name already exists in phonebook!'})
+  }
+
   const id = Math.floor(Math.random()*1000000)
   const person = {
     id,
-    name: body.name,
-    number: body.number
+    name,
+    number
   }
   persons = persons.concat(person)
   response.json(person)
