@@ -31,22 +31,16 @@ app.post('/api/persons', (request, response)=>{
     return
   }
 
-  const duplicate = persons.find(person => {
-    return person.name.toLowerCase()===name.toLowerCase()
-  })
-
-  if (duplicate) {
-    return response.status(400).json({error: 'Name already exists in phonebook!'})
-  }
-
-  const id = Math.floor(Math.random()*1000000)
-  const person = {
-    id,
+  const person = new Person({
     name,
     number
-  }
-  persons = persons.concat(person)
-  response.json(person)
+  })
+
+    person.save().then(savedPerson=> {
+    console.log(`added ${savedPerson.name} number ${savedPerson.number} to phone book`)
+    response.json(savedPerson)
+})
+  
 })
 
 app.get('/info', (request, response)=>{
