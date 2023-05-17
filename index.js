@@ -6,6 +6,21 @@ const cors = require('cors')
 const app = express()
 const Person = require('./models/person')
 
+const unknownEndpoint = (request, response) => {
+  response.status(404).send({error: 'unknown endpoint'})
+}
+
+const errorHandler = (error, request, response, next ) => {
+  console.error(error)
+  console.error(error.message)
+
+  if (error.name=== 'CastError') {
+    return response.status(400).send({error: 'malformatted id'})
+  }
+
+  next(error)
+}
+
 app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
@@ -63,10 +78,12 @@ app.delete('/api/persons/:id', (request, response, next)=>{
   Person.findByIdAndRemove(request.params.id).then(result => {
     response.status(204).end()
   }).catch(error=>{
-    console.log(error)
     return next(error)
   })
 })
+
+app.use(unknownEndpoint)
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 3001
 app.listen(PORT, ()=> {

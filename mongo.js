@@ -27,7 +27,6 @@ Person.find({}).then(result=>{
         console.log(`${person.name} ${person.number}`)
     })
     mongoose.connection.close()
-    // process.exit()
 })
 } else {
 console.log('Create an entry in DB..')
