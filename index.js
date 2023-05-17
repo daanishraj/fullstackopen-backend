@@ -79,6 +79,18 @@ app.get('/api/persons/:id', (request, response)=>{
     response.json(`${person.name} ${person.number}`)
 })
 
+app.put('/api/persons/:id', (request, response, next)=>{
+  const {name, number}= request.body
+
+
+  const person = {name, number}
+  Person.findByIdAndUpdate(request.params.id, person, {new:true})
+  .then(updatedPerson => {
+    response.status(200).json(updatedPerson)
+  })
+  .catch(error=>next(error))
+})
+
 app.delete('/api/persons/:id', (request, response, next)=>{
   Person.findByIdAndRemove(request.params.id).then(result => {
     response.status(204).end()

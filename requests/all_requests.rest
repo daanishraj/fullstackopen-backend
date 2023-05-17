@@ -9,3 +9,11 @@ content-type: application/json
 }
 ###
 DELETE http://localhost:3001/api/persons/645a5de26e8da4a0a51bed
+###
+PUT http://localhost:3001/api/persons/645b983b0aced40ac5a18933
+content-type: application/json
+
+{
+    "name": "MS Dhoni",
+    "number": "2019"
+}
