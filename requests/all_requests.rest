@@ -1,5 +1,9 @@
 GET http://localhost:3001/api/persons
 ###
+GET http://localhost:3001/api/persons/64591f5c5055660062b69bbd
+###
+GET http://localhost:3001/info
+###
 POST http://localhost:3001/api/persons
 content-type: application/json
 

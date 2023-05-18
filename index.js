@@ -64,26 +64,29 @@ app.post('/api/persons', (request, response)=>{
   
 })
 
-app.get('/info', (request, response)=>{
-    const message = `Phonebook has info for ${persons.length} people`
+app.get('/info', async (request, response)=>{
+    const peopleCount = await Person.countDocuments({}).exec()
+    const message = `Phonebook has info for ${peopleCount} people`
     response.send(`<p>${message}</p><br/><p>${Date()}</p>`)
 })
 
-app.get('/api/persons/:id', (request, response)=>{
-    const id = Number(request.params.id)
-    const person = persons.find(person=> person.id===id)
-    if (!person) {
+app.get('/api/persons/:id', (request, response, next)=>{
+  console.log('GET specific person...');
+    Person.findById(request.params.id)
+    .then(person => {
+      console.log(person);
+      if (person) {
+        response.status(200).json(person)
+      }
         response.status(404).end()
-        return
-    }
-    response.json(`${person.name} ${person.number}`)
+    })
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next)=>{
   const {name, number}= request.body
-
-
   const person = {name, number}
+ 
   Person.findByIdAndUpdate(request.params.id, person, {new:true})
   .then(updatedPerson => {
     response.status(200).json(updatedPerson)
