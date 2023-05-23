@@ -34,10 +34,11 @@ app.use(express.json())
 app.use(requestLogger)
 app.use(express.static('build'))
 
-app.get('/api/persons', (request, response)=>{
+app.get('/api/persons', (request, response, next)=>{
     Person.find({}).then(people=> {
       response.json(people)
     })
+    .catch(error=>next(error))
     
 })
 
